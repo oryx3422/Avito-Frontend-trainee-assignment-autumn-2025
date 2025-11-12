@@ -1,25 +1,16 @@
 import React from "react";
-import { BrowserRouter, Link } from "react-router-dom";
+import { BrowserRouter} from "react-router-dom";
 import AppRouter from "./UI/AppRouter";
+import Navbar from "./UI/Navbar";
 
-// import './App.css'
+import './styles/Reset.css'
+import './styles/App.css'
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <div>
-          <nav>
-            <Link to="/">Home</Link>
-            <br />
-            <Link to="/list">ListPage</Link>
-            <br />
-            <Link to="/ItemPage">ItemPage</Link>
-            <br />
-            <Link to="/StatsPage">StatsPage</Link>
-          </nav>
-        </div>
-
+        <Navbar />
         <AppRouter />
       </BrowserRouter>
     </>

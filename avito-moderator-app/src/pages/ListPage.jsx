@@ -2,6 +2,8 @@
 // edit route by pages: list => list/1 list/2 ... list/10
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import AdCard from "../components/AdCard";
+import Pagination from "../components/pagination";
 
 const ListPage = () => {
 
@@ -35,44 +37,31 @@ const ListPage = () => {
     fetchAds(currentPage);
   }, [currentPage]);
 
-  if (loading) return <>загрузка...</>; // todo: add loader
-  if (error) return <>{error}</>;
+  if (loading) return <div className="loading">загрузка...</div>; // todo: add loader
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <>
-      <h1>объявления</h1>
-      <p>всего объявлений: {pagination.totalItems}</p>
-      <ul>
-        {ads.map((ad) => (
-          <li key={ad.id} style={{listStyle: 'none', background: '#ababab', width: '400px'}}>
-            <h3>{ad.title}</h3>
-            <p>Цена: <b>{ad.price}₽</b></p>
-            <p>Категория: {ad.category}</p>
-            <p>Дата создания: {new Date(ad.createdAt).toLocaleDateString()}</p>
-            <p>Статус: {ad.status}</p>
-            <p>Приоритет: {ad.priority}</p>
-            <hr />
-          </li>
-        ))}
-      </ul>
+      <h1 className="ads-title">Объявления для вас </h1>
+      <p className="ads-totalItems">всего объявлений: {pagination.totalItems}</p>
 
-      <div>
-        <button
-          disabled={pagination.currentPage === 1}
-          onClick={() => setCurrentPage(pagination.currentPage - 1)}
-        >
-          предыдущая
-        </button>
-        <span>
-          {pagination.currentPage} / {pagination.totalPages}
-        </span>
-        <button
-          disabled={pagination.currentPage === pagination.totalPages}
-          onClick={() => setCurrentPage(pagination.currentPage + 1)}
-        >
-          следующая
-        </button>
+      <Pagination 
+      currentPage={pagination.currentPage} 
+      totalPages={pagination.totalPages}
+      onPageChange={(page) => setCurrentPage(page)}
+      />
+
+      <div className="ads-list">
+        {ads.map((ad) => (
+           <AdCard ad={ad} key={ad.id}/>
+        ))}
       </div>
+
+      <Pagination 
+      currentPage={pagination.currentPage} 
+      totalPages={pagination.totalPages}
+      onPageChange={(page) => setCurrentPage(page)}
+      />
     </>
   );
 };

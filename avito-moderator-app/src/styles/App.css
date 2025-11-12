@@ -21,7 +21,8 @@ body {
 
 .ads-totalItems {
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 } 
 
 /* btn start */
@@ -144,7 +145,7 @@ button:disabled {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2rem;
+  margin: 0 0 1rem;
 }
 
 .pagination-container span {

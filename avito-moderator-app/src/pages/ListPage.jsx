@@ -1,4 +1,5 @@
 // todo:
+// filter
 // edit route by pages: list => list/1 list/2 ... list/10
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -43,14 +44,6 @@ const ListPage = () => {
   return (
     <>
       <h1 className="ads-title">Объявления для вас </h1>
-      <p className="ads-totalItems">всего объявлений: {pagination.totalItems}</p>
-
-      <Pagination 
-      currentPage={pagination.currentPage} 
-      totalPages={pagination.totalPages}
-      onPageChange={(page) => setCurrentPage(page)}
-      />
-
       <div className="ads-list">
         {ads.map((ad) => (
            <AdCard ad={ad} key={ad.id}/>
@@ -62,6 +55,8 @@ const ListPage = () => {
       totalPages={pagination.totalPages}
       onPageChange={(page) => setCurrentPage(page)}
       />
+      <p className="ads-totalItems">Всего объявлений: {pagination.totalItems}</p>
+
     </>
   );
 };

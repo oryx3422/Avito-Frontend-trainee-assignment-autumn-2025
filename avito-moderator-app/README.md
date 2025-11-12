@@ -1,16 +1,36 @@
-# React + Vite
+# TODO:
+- eslint, prettier, minify, babel into Vite
+- state manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## README:
+- Add description
+- Add documentation
+- Add instructions
 
-Currently, two official plugins are available:
+### In the last:
+- Docker
+- Rewrite to TypeScript
+- Tests not done earlier
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Optional Features:
+1. **Hotkeys**:
+   - `A` - Approve announcement
+   - `D` - Reject announcement
+   - `→` - Next announcement
+   - `←` - Previous announcement
+   - `/` - Focus on search
 
-## React Compiler
+2. **Dark Mode**:
+   - Theme toggle
+   - Save selection in localStorage
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **Data Export**:
+   - Export statistics to CSV
+   - Generate PDF report
 
-## Expanding the ESLint configuration
+4. **Animations**:
+   - Smooth transitions between pages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Specifications:
+- react-router-dom for routing
+- axios for fetching data

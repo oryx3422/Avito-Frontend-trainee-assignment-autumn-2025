@@ -9,10 +9,10 @@ const AppRouter = () => {
   return (
     <div className="appRouter">
       <Routes>
-        <Route path="/" element={<Home />}/>
-        <Route path="/list" element={<ListPage />}/>
-        <Route path="/ItemPage" element={<ItemPage />}/>
-        <Route path="/StatsPage" element={<StatsPage />}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/list" element={<ListPage />} />
+        <Route path="/item/:id" element={<ItemPage />} />
+        <Route path="/StatsPage" element={<StatsPage />} />
         <Route path="*" element={<Navigate to="/list" />} />
       </Routes>
     </div>

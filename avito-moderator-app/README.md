@@ -1,5 +1,6 @@
 # TODO:
 - eslint, prettier, minify, babel into Vite
+- decompose, styling
 listpage
 - сортировка, фильтр 
 itempage
@@ -8,6 +9,7 @@ itempage
 -  навигацию починить itempage из-за пагинации доступны только те, которые на странице
 -  горячие клави
 statspage
+- графики ----
 - в csv
 - в pdf
 в конце

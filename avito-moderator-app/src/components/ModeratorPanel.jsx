@@ -130,7 +130,7 @@ const ModeratorPanel = ({ adId }) => {
       >
         Доработка
       </button>
-
+ 
       {action === "rejected" && (
         <div className="reason-container">
           <label>Укажите причину отклонения:</label>

@@ -157,7 +157,7 @@ const ItemPage = () => {
             </p>
             {moderator.action === "rejected" && (
               <div>
-                <p>
+                <p> 
                   Причина:{" "}
                   {moderator.comment ? moderator.comment : moderator.reason}
                 </p>

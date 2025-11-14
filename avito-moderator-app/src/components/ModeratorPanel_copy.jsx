@@ -53,7 +53,7 @@ const ModeratorPanel_copy = ({ adId }) => {
       setIsSending(false);
     }
   };
-
+ 
   return (
     <div className="moderator-panel">
       <button

@@ -28,7 +28,7 @@ const ListPage = () => {
           limit: 10,
           // status: ["approved"],
         },
-      });
+      }); 
       setAds(response.data.ads);
       setPagination(response.data.pagination);
     } catch (err) {

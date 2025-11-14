@@ -1,60 +1,120 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const ModeratorPanel = () => {
+const ModeratorPanel = ({ adId }) => {
   const [action, setAction] = useState(null);
   const [reason, setReason] = useState("");
   const [customReason, setCustomReason] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [showRejectButton, setShowRejectButton] = useState(false);
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     setAction("approved");
     setReason("");
     setCustomReason("");
+
+    try {
+      setIsSending(true);
+      await postAdApprove(adId);
+    } catch (err) {
+      console.error(`approve error: ${err}`);
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     setAction("rejected");
     setReason("");
     setCustomReason("");
+
+    if (!reason) {
+      console.log("not reason");
+      return;
+    }
+
+    setShowRejectButton(true);
+
+    try {
+      setIsSending(true);
+      const dataToSend = {
+        reason: reason === "other" ? customReason : reason,
+      };
+
+      await postAdReject(adId, dataToSend);
+    } catch (err) {
+      console.error(`reject error: ${err}`);
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const handleRequestChanges = () => {
+  const handleRequestChanges = async () => {
     setAction("requestChanges");
     setReason("");
     setCustomReason("");
-  };
 
-  const handleReasonChange = (e) => {
-    setReason(e.target.value);
-  };
+    try {
+      setIsSending(true);
+      const dataToSend = {
+        status: "pending",
+      };
 
-  const handleCustomReasonChange = (e) => {
-    setCustomReason(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    if (!action) {
-      console.log("choise action");
-      return;
+      await postAdRequestChanges(adId, dataToSend);
+    } catch (err) {
+      console.error(`request-changes error: ${err}`);
+    } finally {
+      setIsSending(false);
     }
-    if (action === "rejected" && !reason) {
-      console.log("choice reason");
-      return;
+  };
+
+  const postAdApprove = async (adId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/v1/ads/${adId}/approve`
+      );
+      console.log("approve:", response.data);
+    } catch (err) {
+      console.error("approve error:", err);
     }
-    if (reason === "other" && !reason) {
-      console.log("choice reason");
-      return;
+  };
+
+  const postAdReject = async (adId, dataToSend) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/v1/ads/${adId}/reject`,
+        dataToSend
+      );
+      console.log("reject:", response.data);
+    } catch (err) {
+      console.error("reject error", err);
+    }
+  };
+
+  const postAdRequestChanges = async (adId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/v1/ads/${adId}/request-changes`
+      );
+      console.log("request-changes:", response.data);
+    } catch (err) {
+      console.error("request-changes error", err);
     }
   };
 
   const reasonText = {
     banItem: "Запрещённый товар",
     incorrectCategory: "Неверная категория",
+    incorrectDescription: "Некорректное описание",
+    incorrectPhoto: "Проблемы с фото",
     scam: "Подозрение на мошенничество",
     other: customReason,
   };
 
   const isSubmitDisabled =
-    action !== "approved" && (!reason || (reason === "other" && !customReason));
+    isSending ||
+    (action === "rejected" && !reason) ||
+    (action === "rejected" && reason === "other" && !customReason);
 
   return (
     <div className="moderation-actions">
@@ -76,12 +136,14 @@ const ModeratorPanel = () => {
           <label>Укажите причину отклонения:</label>
           <select
             value={reason}
-            onChange={handleReasonChange}
+            onChange={(e) => setReason(e.target.value)}
             disabled={customReason !== ""}
           >
             <option value="">Выберите причину</option>
             <option value="banItem">Запрещённый товар</option>
             <option value="incorrectCategory">Неверная категория</option>
+            <option value="incorrectDescription">Некорректное описание</option>
+            <option value="incorrectPhoto">Проблемы с фото</option>
             <option value="scam">Подозрение на мошенничество</option>
             <option value="other">Другое</option>
           </select>
@@ -90,7 +152,7 @@ const ModeratorPanel = () => {
               type="text"
               placeholder="Введите вашу причину"
               value={customReason}
-              onChange={handleCustomReasonChange}
+              onChange={(e) => setCustomReason(e.target.value)}
             />
           )}
         </div>
@@ -110,10 +172,6 @@ const ModeratorPanel = () => {
         </div>
       )}
 
-      <button onClick={handleSubmit} disabled={isSubmitDisabled}>
-        Отправить
-      </button>
-      <br />
       <br />
     </div>
   );

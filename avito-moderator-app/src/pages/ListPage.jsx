@@ -26,7 +26,7 @@ const ListPage = () => {
         params: {
           page,
           limit: 10,
-          // status: ["approved", "pending"],
+          // status: ["approved"],
         },
       });
       setAds(response.data.ads);

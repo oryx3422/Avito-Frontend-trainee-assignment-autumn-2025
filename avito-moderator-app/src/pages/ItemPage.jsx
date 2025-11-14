@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 // import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import ModeratorPanel from "../components/ModeratorPanel";
+import ModeratorPanel_copy from "../components/ModeratorPanel_copy";
 
 const ItemPage = () => {
   const { id } = useParams();
@@ -79,8 +79,7 @@ const ItemPage = () => {
 
   return (
     <div className="item-page">
-      
-      <ModeratorPanel />
+      <ModeratorPanel_copy adId={ad.id} />
 
       <div className="item-card">
         <h1 className="item-title">{ad.title}</h1>
@@ -138,13 +137,34 @@ const ItemPage = () => {
       <br />
 
       <div className="moderation__container">
-        <h2 className="moderation-title">История модерации</h2>
+        <h2 className="moderation-title">
+          <b>История модерации</b>
+        </h2>
+        <br />
         {moderationHistory.map((moderator, index) => (
           <div key={index}>
             <p>Проверил: {moderator.moderatorName}</p>
             <p>{new Date(moderator.timestamp).toLocaleDateString()}</p>
-            <p>{moderator.action === "approved" ? "Одобрено" : "Отклонено"}</p>
-            <p>{moderator.comment || "Нет комментария"}</p>
+
+            <p>
+              {moderator.action === "approved"
+                ? "Одобрено"
+                : moderator.action === "rejected"
+                ? "Отклонено"
+                : moderator.action === "requestChanges"
+                ? "Запрос на доработку"
+                : ""}
+            </p>
+            {moderator.action === "rejected" && (
+              <div>
+                <p>
+                  Причина:{" "}
+                  {moderator.comment ? moderator.comment : moderator.reason}
+                </p>
+              </div>
+            )}
+
+            <br />
           </div>
         ))}
       </div>

@@ -2,6 +2,13 @@
 - eslint, prettier, minify, babel into Vite
 - state manager
 
+- filter, sort on listpage
+  
+- hotkeys on itempage
+- post on itempage
+
+- statspage
+
 ## README:
 - Add description
 - Add documentation

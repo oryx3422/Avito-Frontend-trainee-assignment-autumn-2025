@@ -21,23 +21,26 @@ ChartJS.register(
   Legend
 );
 
-const ChartActivity = () => {
-  const [activityData, setActivityData] = useState([]);
+const ChartCategories = () => {
+  const [categoryData, setCategoriesData] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchActivityData = async () => {
+  const fetchCategoryData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:3001/api/v1/stats/chart/activity",
+        "http://localhost:3001/api/v1/stats/chart/categories",
         {
           params: {},
         }
       );
-      setActivityData(response.data);
+      setCategoriesData(response.data);
     } catch (err) {
-      setError(`Произошла ошибка при загрузке данных activity: ${err.message}`);
+      setError(
+        `Произошла ошибка при загрузке данных decisions: ${err.message}`
+      );
       console.error(`fetch error: ${err}`);
     } finally {
       setLoading(false);
@@ -45,31 +48,19 @@ const ChartActivity = () => {
   };
 
   useEffect(() => {
-    fetchActivityData();
+    fetchCategoryData();
   }, []);
 
   if (loading) return <div className="loading">загрузка...</div>; // todo: add loader
   if (error) return <div className="error">{error}</div>;
 
-  const activityChartData = {
-    labels: activityData.map((item) => item.date),
+  const categoryChartData = {
+    labels: Object.keys(categoryData), // Названия категорий
     datasets: [
       {
-        label: "Одобрено",
-        data: activityData.map((item) => item.approved),
-        backgroundColor: "rgb(0, 255, 0 , 0.5)",
-        borderWidth: 1,
-      },
-      {
-        label: "Отклонено",
-        data: activityData.map((item) => item.rejected),
-        backgroundColor: "rgb(255, 0, 0 , 0.5)",
-        borderWidth: 1,
-      },
-      {
-        label: "На доработку",
-        data: activityData.map((item) => item.requestChanges),
-        backgroundColor: "rgb(255, 255, 0 , 0.5)",
+        label: "Всего",
+        data: Object.values(categoryData), // Значения для каждой категории
+        backgroundColor: "rgba(100, 100, 255, 0.5)",
         borderWidth: 1,
       },
     ],
@@ -85,11 +76,11 @@ const ChartActivity = () => {
           marginBottom: "50px",
         }}
       >
-        <h3>График активности</h3>
-        <Bar data={activityChartData} options={{ responsive: true }} />
+        <h3>График по категориям проверенных объявлений</h3>
+        <Bar data={categoryChartData} options={{ responsive: true }} />
       </div>
     </div>
   );
 };
 
-export default ChartActivity;
+export default ChartCategories;

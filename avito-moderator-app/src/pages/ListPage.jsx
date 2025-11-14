@@ -28,11 +28,11 @@ const ListPage = () => {
           limit: 10,
           // status: ["approved"],
         },
-      }); 
+      });
       setAds(response.data.ads);
       setPagination(response.data.pagination);
     } catch (err) {
-      setError(`Произошла ошибка при загрузке данных: ${err.message}`);
+      setError(`Произошла ошибка при загрузке данных list: ${err.message}`);
       console.error(`fetch error: ${err}`);
     } finally {
       setLoading(false);

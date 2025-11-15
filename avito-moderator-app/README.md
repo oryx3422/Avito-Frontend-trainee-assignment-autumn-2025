@@ -1,42 +1,28 @@
 # TODO:
 - eslint, prettier, minify, babel into Vite
-- state manager
-
-- filter, sort on listpage
-  
-- hotkeys on itempage
-- post on itempage
-
-- statspage
+- decompose, styling
+listpage
+- сортировка, фильтр 
+itempage
+- кнопки post доделать
+-  карусель фото
+-  навигацию починить itempage из-за пагинации доступны только те, которые на странице
+-  горячие клави
+statspage
+- графики ----
+- в csv
+- в pdf
+в конце
+- плавный переход между страницами
+- URL-синхронизация фильтров (можно поделиться ссылкой)
+- темная тема->localstorage
+если останется время
+- тесты. не делал раньше
 
 ## README:
 - Add description
 - Add documentation
 - Add instructions
-
-### In the last:
-- Docker
-- Rewrite to TypeScript
-- Tests not done earlier
-
-## Optional Features:
-1. **Hotkeys**:
-   - `A` - Approve announcement
-   - `D` - Reject announcement
-   - `→` - Next announcement
-   - `←` - Previous announcement
-   - `/` - Focus on search
-
-2. **Dark Mode**:
-   - Theme toggle
-   - Save selection in localStorage
-
-3. **Data Export**:
-   - Export statistics to CSV
-   - Generate PDF report
-
-4. **Animations**:
-   - Smooth transitions between pages
 
 ## Specifications:
 - react-router-dom for routing

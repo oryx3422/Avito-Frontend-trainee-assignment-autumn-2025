@@ -125,11 +125,13 @@ const ItemPage = () => {
         <br />
 
         <div className="item-seller">
-          <p className="item-seller__name">{ad.seller.name}</p>
-          <p className="item-seller__rating">{ad.seller.rating}</p>
-          <p className="item-seller__adCount">{ad.seller.totalAds}</p>
+          <p className="item-seller__name">Продавец: {ad.seller.name}</p>
+          <p className="item-seller__rating">Рейтинг: {ad.seller.rating}</p>
+          <p className="item-seller__adCount">
+            {ad.seller.totalAds} объявлений
+          </p>
           <p className="item-seller__dataOfRegistration">
-            {new Date(ad.seller.registeredAt).toLocaleDateString()}
+            На сайте с {new Date(ad.seller.registeredAt).toLocaleDateString()}
           </p>
         </div>
       </div>

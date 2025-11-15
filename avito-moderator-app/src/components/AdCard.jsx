@@ -22,7 +22,6 @@ const AdCard = ({ ad }) => {
         <p className="ad-date">
           Дата создания: {new Date(ad.createdAt).toLocaleDateString()}
         </p>
-        <br />
 
         <p className="ad-category">Категория: {ad.category}</p>
         <p className="ad-status">
@@ -36,6 +35,7 @@ const AdCard = ({ ad }) => {
         <p className="ad-priority">
           Приоритет: {ad.priority === "urgent" ? "срочный" : "обычный"}
         </p>
+        <hr />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdCard from "../components/AdCard";
 import Pagination from "../components/pagination";
+import MySelect from "../UI/select/MySelect";
 
 const ListPage = () => {
   const [ads, setAds] = useState([]);
@@ -16,6 +17,8 @@ const ListPage = () => {
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [selectedSort, setSelectedSort] = useState("default");
 
   const navigate = useNavigate();
 
@@ -41,7 +44,7 @@ const ListPage = () => {
 
   useEffect(() => {
     fetchAds(currentPage);
-  }, [currentPage, ]);
+  }, [currentPage]);
 
   const handleCLick = (ad) => {
     console.log("navigate to ad.id:", ad.id);
@@ -53,10 +56,66 @@ const ListPage = () => {
   if (loading) return <div className="loading">загрузка...</div>; // todo: add loader
   if (error) return <div className="error">{error}</div>;
 
+  const sortPosts = (sort) => {
+    setSelectedSort(sort);
+    console.log(sort);
+
+    const sorted = [...ads];
+
+    switch (sort) {
+      case "default":
+        fetchAds(1);
+        return;
+
+      case "priotiry":
+        sorted.sort((a, b) => {
+          const order = ["urgent", "normal"];
+          return order.indexOf(a.priority) - order.indexOf(b.priority);
+        });
+        break;
+
+      case "updated-new":
+        sorted.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        break;
+
+      case "updated-old":
+        sorted.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+        break;
+
+      case "price-asc":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+
+      case "price-desc":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+
+      default:
+        break;
+    }
+
+    setAds(sorted);
+  };
+
   return (
     <>
       <h1 className="ads-title">Объявления для вас </h1>
+      <MySelect
+        value={selectedSort}
+        onChange={sortPosts}
+        defaultValue="Сортировка"
+        options={[
+          { value: "default", name: "По умолчанию" },
+          { value: "priotiry", name: "По приоритету" },
+          { value: "updated-new", name: "Сначала новые" },
+          { value: "updated-old", name: "Сначала старые" },
+          { value: "price-asc", name: "Дешевле" },
+          { value: "price-desc", name: "Дороже" },
+        ]}
+      />
       <div className="ads-list">
+        <hr />
+
         {ads.map((ad) => (
           <div
             className="add-card__container"

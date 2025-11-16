@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import classes from "./ChartActivity.module.css";
 
 import { Bar } from "react-chartjs-2";
 
@@ -27,8 +28,8 @@ const ChartActivity = () => {
     fetchActivityData();
   }, []);
 
-  if (loading) return <div className="loading">загрузка...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <div className={classes.loading}>загрузка...</div>;
+  if (error) return <div className={classes.error}>{error}</div>;
 
   const activityChartData = {
     labels: activityData.map((item) => item.date),
@@ -55,21 +56,15 @@ const ChartActivity = () => {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          width: "800px",
-          height: "400px",
-          margin: "0 auto",
-          marginBottom: "50px",
-        }}
-      >
-        <h3>График активности</h3>
+    <div className={classes.chartWrapper}>
+      <h3 className={classes.chartTitle}>График активности</h3>
 
+      <div className={classes.chartContainer}>
         <Bar
           data={activityChartData}
           options={{
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               legend: {
                 display: true,
@@ -82,7 +77,8 @@ const ChartActivity = () => {
               y: {
                 ticks: {
                   stepSize: 1,
-                  callback: (value) => (Number.isInteger(value) ? value : null),
+                  callback: (value) =>
+                    Number.isInteger(value) ? value : null,
                 },
               },
               x: {

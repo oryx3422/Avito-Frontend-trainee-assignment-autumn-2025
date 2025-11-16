@@ -3,18 +3,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import ModeratorPanel from "../components/ModeratorPanel";
+import ModeratorPanel from "../../components/ModeratorPanel/ModeratorPanel.jsx";
+import ItemNavigate from "../../components/ItemNavigate.jsx";
+
+import Loader from "../../UI/Loader/Loader.jsx";
+
+import './ItemPage.css'
+
 
 const ItemPage = () => {
   const { id } = useParams();
   const location = useLocation();
+  const page = location.state?.page || 1;
   const navigate = useNavigate();
 
   const [ad, setAd] = useState(null);
-  const [ads, setAds] = useState(location.state ? location.state.ads : []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const ads = location.state?.ads || [];
+
 
   // useEffect(() => {
   //   // console.log(`ads: ${ads}`);
@@ -30,6 +38,13 @@ const ItemPage = () => {
   //     setError("Объявление не найдено!");
   //   }
   // }, [id, ads]);
+
+  useEffect(() => {
+  if (ads.length > 0) {
+    const index = ads.findIndex(a => a.id === Number(id));
+    setCurrentAdIndex(index === -1 ? 0 : index);
+  }
+}, [id, ads]);
 
   const fetchAdDetails = async () => {
     try {
@@ -52,25 +67,24 @@ const ItemPage = () => {
 
   const handleToList = () => {
     console.log(`navigate to list`);
-    navigate("/list");
+    navigate(`/list/${page}`);
   };
 
-  const handlePrevAd = () => {
-    const prevAdIndex = currentAdIndex > 0 ? currentAdIndex - 1 : 0;
-    const prevAd = ads[prevAdIndex];
-    console.log(`navigate to ad.id: ${prevAd.id}`);
-    navigate(`/item/${prevAd.id}`, { state: { ads } });
-  };
+const handlePrevAd = () => {
+  if (currentAdIndex <= 0) return;
+  const prevAd = ads[currentAdIndex - 1];
+  navigate(`/item/${prevAd.id}`, { state: { ads, page  } });
+};
 
-  const handleNextAd = () => {
-    const nextAdIndex =
-      currentAdIndex < ads.length - 1 ? currentAdIndex + 1 : ads.length - 1;
-    const nextAd = ads[nextAdIndex];
-    console.log(`navigate to ad.id: ${nextAd.id}`);
-    navigate(`/item/${nextAd.id}`, { state: { ads } });
-  };
 
-  if (loading) return <div className="loading">загрузка...</div>; // todo: add loader
+const handleNextAd = () => {
+  if (currentAdIndex >= ads.length - 1) return;
+  const nextAd = ads[currentAdIndex + 1];
+  navigate(`/item/${nextAd.id}`, { state: { ads, page } });
+};
+
+
+  if (loading) return <div className="loading"><Loader /></div>; // todo: add loader
   if (error) return <div className="error">{error}</div>;
 
   if (!ad) return <div>Объявление не найдено!</div>;
@@ -80,6 +94,12 @@ const ItemPage = () => {
   return (
     <div className="item-page">
       <ModeratorPanel adId={ad.id} />
+      <ItemNavigate 
+        onToList={handleToList}
+  onPrev={handlePrevAd}
+  onNext={handleNextAd}
+  disablePrev={currentAdIndex === 0}
+  disableNext={currentAdIndex === ads.length - 1}/>
 
       <div className="item-card">
         <h1 className="item-title">{ad.title}</h1>
@@ -90,7 +110,6 @@ const ItemPage = () => {
               return (
                 <img
                   loading="lazy"
-                  style={{ margin: "0 1rem 0" }}
                   key={index}
                   src={image}
                   alt={`Изображение ${index + 1}`}
@@ -171,20 +190,28 @@ const ItemPage = () => {
         ))}
       </div>
 
-      <div className="navigate__container">
+      {/* <div className="navigate__container">
         <div className="navigation-buttons">
-          <button onClick={handleToList}>К списку</button>
-          <button onClick={handlePrevAd} disabled={currentAdIndex === 0}>
+          <MyButton onClick={handleToList}>К списку</MyButton>
+          <MyButton onClick={handlePrevAd} disabled={currentAdIndex === 0}>
             Пред
-          </button>
-          <button
+          </MyButton>
+          <MyButton
             onClick={handleNextAd}
             disabled={currentAdIndex === ads.length - 1}
           >
             След
-          </button>
+          </MyButton>
         </div>
-      </div>
+      </div> */}
+
+        <ItemNavigate 
+        onToList={handleToList}
+  onPrev={handlePrevAd}
+  onNext={handleNextAd}
+  disablePrev={currentAdIndex === 0}
+  disableNext={currentAdIndex === ads.length - 1}/>
+
     </div>
   );
 };

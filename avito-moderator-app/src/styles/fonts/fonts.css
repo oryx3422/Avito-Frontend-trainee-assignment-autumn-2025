@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("./Roboto.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./Geist.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SchibstedGrotesk";
+  src: url("./SchibstedGrotesk.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}

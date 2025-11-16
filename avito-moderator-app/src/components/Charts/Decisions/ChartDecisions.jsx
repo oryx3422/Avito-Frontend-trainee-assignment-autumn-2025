@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Pie } from "react-chartjs-2";
+import classes from "./ChartDecisions.module.css";
 
 const ChartDecisions = () => {
   const [decisionsData, setDecisionsData] = useState({
@@ -33,8 +34,8 @@ const ChartDecisions = () => {
     fetchDecisionData();
   }, []);
 
-  if (loading) return <div>загрузка...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className={classes.loading}>загрузка...</div>;
+  if (error) return <div className={classes.error}>{error}</div>;
 
   const values = [
     decisionsData.approved,
@@ -61,21 +62,16 @@ const ChartDecisions = () => {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          width: "500px",
-          height: "500px",
-          margin: "0 auto",
-          marginBottom: "50px",
-        }}
-      >
-        <h3>Распределение решений</h3>
+    <div className={classes.chartWrapper}>
+      <h3 className={classes.chartTitle}>Распределение решений</h3>
 
+      <div className={classes.chartContainer}>
         <Pie
           data={decisionsChartData}
           options={{
             responsive: true,
+            maintainAspectRatio: false,
+
             plugins: {
               legend: {
                 display: true,
@@ -86,9 +82,7 @@ const ChartDecisions = () => {
                 callbacks: {
                   label: function (context) {
                     const value = context.raw;
-
                     if (value === 0) return "";
-
                     const percent = ((value / total) * 100).toFixed(2);
                     return `${context.label}: ${percent}%`;
                   },
@@ -98,10 +92,8 @@ const ChartDecisions = () => {
               datalabels: {
                 color: "#000",
                 font: { size: 14 },
-
                 formatter: (value) => {
                   if (value === 0 || total === 0) return "";
-
                   const percent = ((value / total) * 100).toFixed(2);
                   return `${percent}%`;
                 },

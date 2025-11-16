@@ -1,0 +1,93 @@
+.list-container {
+  max-width: 60%;
+  margin: 0 auto;
+}
+
+.ads-title {
+  font-size: 24px;
+  font-weight: 700;
+
+  margin-bottom: 10px;
+
+}
+
+.ads-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 16px;
+  margin-bottom: 10px;
+
+  border: 1px solid #000;
+
+}
+
+.filter-group {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ads-search {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.ads-filter input,
+.ads-filter select {
+  width: 100%;
+}
+
+.ads-sort {
+  display: flex;
+  justify-content: start;
+  margin-left: -5px;
+  margin-bottom: 10px;
+}
+
+.ads-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+.add-card__container {
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.add-card__container:hover {
+  transform: translateY(-2px);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  margin: 25px 0;
+}
+
+.ads-totalItems {
+  text-align: center;
+
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.loading,
+.error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: #666;
+}
+

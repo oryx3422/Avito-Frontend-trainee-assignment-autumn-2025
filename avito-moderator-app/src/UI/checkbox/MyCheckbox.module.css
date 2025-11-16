@@ -1,6 +1,12 @@
-.myCheckbox {
-  padding: 5px;
-  margin: 5px;
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.checkbox {
   cursor: pointer;
-  outline: none;
+  margin: 0;    
 }

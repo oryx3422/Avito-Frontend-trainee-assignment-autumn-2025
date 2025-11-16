@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 import { Bar } from "react-chartjs-2";
-
-
-
+import classes from "./ChartCategories.module.css";
 
 const ChartCategories = () => {
   const [categoryData, setCategoriesData] = useState([]);
@@ -32,8 +29,8 @@ const ChartCategories = () => {
     fetchCategoryData();
   }, []);
 
-  if (loading) return <div className="loading">загрузка...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <div className={classes.loading}>загрузка...</div>;
+  if (error) return <div className={classes.error}>{error}</div>;
 
   const categoryChartData = {
     labels: Object.keys(categoryData),
@@ -48,34 +45,27 @@ const ChartCategories = () => {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          width: "800px",
-          height: "400px",
-          margin: "0 auto",
-          marginBottom: "50px",
-        }}
-      >
-        <h3>График по категориям проверенных объявлений</h3>
+    <div className={classes.chartWrapper}>
+      <h3 className={classes.chartTitle}>
+        График по категориям проверенных объявлений
+      </h3>
 
+      <div className={classes.chartContainer}>
         <Bar
           data={categoryChartData}
           options={{
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-              legend: {
-                display: false,
-              },
-              datalabels: {
-                display: false,
-              },
+              legend: { display: false },
+              datalabels: { display: false },
             },
             scales: {
               y: {
                 ticks: {
                   stepSize: 1,
-                  callback: (value) => (Number.isInteger(value) ? value : null),
+                  callback: (value) =>
+                    Number.isInteger(value) ? value : null,
                 },
               },
               x: {

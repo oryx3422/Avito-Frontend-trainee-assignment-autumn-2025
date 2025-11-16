@@ -5,8 +5,9 @@ import Navbar from "./UI/Navbar";
 
 
 
-// import "./styles/Reset.css";
-// import './styles/App.css'
+import "./styles/Reset.css";
+import "./styles/fonts/fonts.css";
+import './styles/App.css'
 
 function App() {
   return (

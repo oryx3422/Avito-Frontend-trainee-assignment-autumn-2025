@@ -9,36 +9,39 @@ const statusLabels = {
 
 const AdCard = ({ ad }) => {
   return (
-    <div className="ad-card">
-      <div className="ad-image__container">
+    <div className={classes.adCard}>
+
+      <div className={classes.adImageContainer}>
         <img
           loading="lazy"
-          className="ad-image"
+          className={classes.adImage}
           src={ad.images && ad.images.length > 0 ? ad.images[0] : ""}
           alt={`изображение ${ad.title} `}
-          onError={(e) => e.target.src("default-image.jpg")}
+          onError={(e) => (e.target.src = "default-image.jpg")}
         />
       </div>
-      <div className="ad-details">
-        <h3 className="ad-title">{ad.title}</h3>
-        <p className="ad-price">
+
+       <div className={classes.adInfo}>
+        <h3 className={classes.adTitle}>{ad.title}</h3>
+        
+        <p className={classes.adPrice}>
           {ad.price > 0
             ? `${ad.price.toLocaleString("ru-RU")} ₽`
             : "Цена не указана."}
         </p>
-        <p className="ad-date">
-          Дата создания: {new Date(ad.createdAt).toLocaleDateString()}
+        
+        <p className={classes.adMeta}>
+          {ad.category} | {new Date(ad.createdAt).toLocaleDateString()}
         </p>
 
-        <p className="ad-category">Категория: {ad.category}</p>
-        <p className={`ad-status ${classes[`ad-status-${ad.status}`]}`}>
+        <p className={`${classes.adStatus} ${classes[ad.status]}`}>
           Статус: {statusLabels[ad.status] || "неизвестно"}
         </p>
-        <p className="ad-priority">
+        <p className={classes.adPriority}>
           Приоритет: {ad.priority === "urgent" ? "срочный" : "обычный"}
         </p>
-        <hr />
       </div>
+
     </div>
   );
 };

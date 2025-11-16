@@ -41,7 +41,7 @@
 #### 1. Клонирование репозитория
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/oryx3422/Avito-Frontend-trainee-assignment-autumn-2025
 cd Avito-Frontend-trainee-assignment-autumn-2025
 ```
 
@@ -83,7 +83,7 @@ npm run dev
 ### Структура проекта
 
 ```
-├── client/                 # Клиентское приложение (React)
+├── client/                 # Клиентское приложение
 │   ├── src/
 │   │   ├── components/    # React компоненты
 │   │   ├── pages/         # Страницы приложения
@@ -91,7 +91,7 @@ npm run dev
 │   │   └── styles/        # Глобальные стили
 │   ├── package.json
 │   └── vite.config.js
-├── server/                 # Серверное приложение (Express)
+├── server/                 # Серверное приложение
 │   ├── src/
 │   │   ├── controllers/   # Контроллеры API
 │   │   ├── models/        # Модели данных
@@ -99,5 +99,4 @@ npm run dev
 │   ├── server.js
 │   └── package.json
 └── README.md
-
 ```

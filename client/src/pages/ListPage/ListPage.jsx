@@ -1,20 +1,13 @@
-// todo:
-// edit route by pages: list => list/1 list/2 ... list/10
-
-// навигация работает только на объявления, которые в списке limit:
-
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdCard from "../../components/adcard/AdCard";
 import Pagination from "../../components/Pagination/Pagination.jsx";
-
 import MySelect from "../../UI/select/MySelect";
 import MyButton from "../../UI/button/MyButton";
 import MyInput from "../../UI/input/MyInput";
 import MyCheckbox from "../../UI/checkbox/MyCheckBox";
 import Loader from "../../UI/Loader/Loader.jsx";
-
 import "./ListPage.css";
 
 const ListPage = () => {
@@ -31,7 +24,7 @@ const ListPage = () => {
 
   const [selectedSort, setSelectedSort] = useState("");
   const [filters, setFilters] = useState({
-    statuses: [], // ["approved", "rejected", "requestChanges"]
+    statuses: [],
     categoryId: "",
     priceMin: "",
     priceMax: "",
@@ -46,27 +39,20 @@ const ListPage = () => {
         params: { limit: 200 },
       });
       setAllAds(res.data.ads);
-    } catch (err) {
-      console.error("Ошибка при загрузке всех объявлений:", err);
-    }
+    } catch {}
   };
 
   const fetchAds = async (page = 1) => {
     try {
       setLoading(true);
       const response = await axios.get("http://localhost:3001/api/v1/ads", {
-        params: {
-          page,
-          limit: 10,
-          // status: ["approved"],
-        },
+        params: { page, limit: 10 },
       });
       setAds(response.data.ads);
       setAdsOrig(response.data.ads);
       setPagination(response.data.pagination);
     } catch (err) {
       setError(`Произошла ошибка при загрузке данных list: ${err.message}`);
-      console.error(`fetch error: ${err}`);
     } finally {
       setLoading(false);
     }
@@ -81,35 +67,38 @@ const ListPage = () => {
   }, [pageNum]);
 
   useEffect(() => {
+    if (
+      filters.statuses.length > 0 ||
+      filters.categoryId ||
+      filters.priceMin ||
+      filters.priceMax ||
+      filters.search ||
+      selectedSort
+    ) {
+      return;
+    }
+
     fetchAds(currentPage);
   }, [currentPage]);
 
   const handleCLick = (ad) => {
-    console.log("navigate to ad.id:", ad.id);
     navigate(`/item/${ad.id}`, {
       state: { ads: allAds, page: pageNum },
     });
   };
 
-  if (loading)
-    return (
-      <div className="loading">
-        <Loader />
-      </div>
-    ); // todo: add loader
+  if (loading) return <div className="loading"><Loader /></div>;
   if (error) return <div className="error">{error}</div>;
 
-  const applyFiltersAndSort = (sortValue) => {
-    let result = [...adsOrig];
+  const applyFiltersAndSort = (sortValue, page = currentPage) => {
+    let result = [...allAds];
 
     if (filters.statuses.length > 0) {
       result = result.filter((ad) => filters.statuses.includes(ad.status));
     }
 
     if (filters.categoryId) {
-      result = result.filter(
-        (ad) => ad.categoryId === Number(filters.categoryId)
-      );
+      result = result.filter((ad) => ad.categoryId === Number(filters.categoryId));
     }
 
     if (filters.priceMin !== "") {
@@ -127,16 +116,15 @@ const ListPage = () => {
     }
 
     if (filters.search.trim() !== "") {
-      result = result.filter((ad) =>
-        ad.title.toLowerCase().includes(filters.search.toLowerCase())
-      );
+      const s = filters.search.toLowerCase();
+      result = result.filter((ad) => ad.title.toLowerCase().includes(s));
     }
 
     const sort = sortValue || selectedSort;
 
     if (sort) {
       switch (sort) {
-        case "priotiry": {
+        case "priority": {
           const order = ["urgent", "normal"];
           result.sort(
             (a, b) => order.indexOf(a.priority) - order.indexOf(b.priority)
@@ -146,42 +134,56 @@ const ListPage = () => {
         case "updated-new":
           result.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
           break;
-
         case "updated-old":
           result.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
           break;
-
         case "price-asc":
           result.sort((a, b) => Number(a.price) - Number(b.price));
           break;
-
         case "price-desc":
           result.sort((a, b) => Number(b.price) - Number(a.price));
           break;
-
-        case "default":
         default:
           break;
       }
     }
 
-    setAds(result);
+    const pageSize = 10;
+    const totalItems = result.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    const safePage = page > totalPages ? 1 : page;
+
+    const paginated = result.slice(
+      (safePage - 1) * pageSize,
+      safePage * pageSize
+    );
+
+    setAds(paginated);
+    setPagination({
+      totalItems,
+      totalPages,
+      currentPage: safePage,
+    });
+
+    if (safePage !== currentPage) {
+      navigate(`/list/${safePage}`);
+    }
   };
+
+  useEffect(() => {
+    if (allAds.length > 0) {
+      applyFiltersAndSort(selectedSort, currentPage);
+    }
+  }, [allAds]);
 
   const sortPosts = (sort) => {
     setSelectedSort(sort);
-    console.log(sort);
-
-    if (sort === "default") {
-      applyFiltersAndSort("");
-      return;
-    }
-
-    applyFiltersAndSort(sort);
+    applyFiltersAndSort(sort, 1);
   };
 
   const applyFilters = () => {
-    applyFiltersAndSort();
+    applyFiltersAndSort(selectedSort, 1);
   };
 
   const resetFilters = () => {
@@ -199,11 +201,9 @@ const ListPage = () => {
   const toggleCheckbox = (filterName, value) => {
     setFilters((prev) => {
       const list = prev[filterName];
-
       if (list.includes(value)) {
         return { ...prev, [filterName]: list.filter((v) => v !== value) };
       }
-
       return { ...prev, [filterName]: [...list, value] };
     });
   };
@@ -216,7 +216,9 @@ const ListPage = () => {
         <div className="ads-search">
           <MyInput
             value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, search: e.target.value })
+            }
             placeholder="Поиск по объявлениям"
             className="ads-search__input"
             type="text"
@@ -250,7 +252,9 @@ const ListPage = () => {
 
           <MySelect
             value={filters.categoryId}
-            onChange={(value) => setFilters({ ...filters, categoryId: value })}
+            onChange={(value) =>
+              setFilters({ ...filters, categoryId: value })
+            }
             defaultValue="Категория"
             options={[
               { value: "", name: "Все" },
@@ -265,14 +269,18 @@ const ListPage = () => {
           type="number"
           placeholder="Минимальная цена"
           value={filters.priceMin}
-          onChange={(e) => setFilters({ ...filters, priceMin: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, priceMin: e.target.value })
+          }
         />
 
         <MyInput
           type="number"
           placeholder="Максимальная цена"
           value={filters.priceMax}
-          onChange={(e) => setFilters({ ...filters, priceMax: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, priceMax: e.target.value })
+          }
         />
 
         <MyButton onClick={applyFilters}>Применить</MyButton>
@@ -286,7 +294,7 @@ const ListPage = () => {
           defaultValue="Сортировка"
           options={[
             { value: "default", name: "По умолчанию" },
-            { value: "priotiry", name: "По приоритету" },
+            { value: "priority", name: "По приоритету" },
             { value: "updated-new", name: "Сначала новые" },
             { value: "updated-old", name: "Сначала старые" },
             { value: "price-asc", name: "Дешевле" },
@@ -307,15 +315,21 @@ const ListPage = () => {
         ))}
       </div>
 
-      <Pagination
-        className="ads-pagination"
-        currentPage={pagination.currentPage}
-        totalPages={pagination.totalPages}
-        onPageChange={(page) => navigate(`/list/${page}`)}
-      />
-      <p className="ads-totalItems">
-        Всего объявлений: {pagination.totalItems}
-      </p>
+      {pagination && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={(page) =>
+            applyFiltersAndSort(selectedSort, page)
+          }
+        />
+      )}
+
+      {pagination && (
+        <p className="ads-totalItems">
+          Всего объявлений: {pagination.totalItems}
+        </p>
+      )}
     </div>
   );
 };

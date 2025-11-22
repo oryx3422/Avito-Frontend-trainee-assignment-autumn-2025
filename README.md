@@ -46,8 +46,8 @@
 #### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/oryx3422/Avito-Frontend-trainee-assignment-autumn-2025
-cd Avito-Frontend-trainee-assignment-autumn-2025
+git clone https://github.com/oryx3422/Avito-Frontend-assignment-autumn-2025
+cd Avito-Frontend-assignment-autumn-2025
 ```
 
 #### 2. Запуск сервера
